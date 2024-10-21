@@ -1,106 +1,76 @@
-# Basic testing
+# Scoring: Basic testing
 
-⚠️ DO NOT SUBMIT PULL REQUESTS TO THIS REPO ⚠️
+## Check
 
----
+All tests are implemented except:
 
-### Prerequisites
-1. Install [Node.js](https://nodejs.org/en/download/)   
-2. Fork this repository: https://github.com/AlreadyBored/basic-testing
-3. Clone your newly created repo locally: https://github.com/<%your_github_username%>/basic-testing/  
-4. Go to folder `basic-testing`  
-5. To install all dependencies use [`npm install`](https://docs.npmjs.com/cli/install)  
-6. Run **test scripts** in command line.
-7. You will see the number of skipped, passing and failing tests.
+- 07-mocking-lib-api/should perform request to correct provided url
 
----
+As there was some stupid bug I couldn't figure out in time that would prevent the mocked function from being called.
 
-### Test scripts
+## Basic Scope
 
-```bash
-# run unit tests
-$ npm run test
+For each implemented test-case:
 
-# with logging
-$ npm run test:verbose
+- **+6** if test case is implemented correctly
+- **+3** if test case is implemented incorrectly
+- **0** if test case is not implemented
+
+Test case is considered to be correctly implemented if:
+
+- Actually tests what's described in its title
+
+Bad:
+
+```ts
+test('should return null if one of arguments is negative number', () => {
+  const result = sumPositiveNumbers(2, 3);
+  expect(result).toBe(5);
+});
 ```
 
----
+Good:
 
-#### Notes
-1. We recommend you to use Node.js of version 20.x.x LTS. If you use any of features, that does not supported by Node.js 20, there may be problems with task submit.
-2. Please, be sure that each of your tests is limited to 30 sec.
+```ts
+test('should return null if one of arguments is negative number', () => {
+  const result = sumPositiveNumbers(1, -1);
+  expect(result).toBeNull();
+});
+```
 
----
+- Doesn't break in case if we break functionality that is being tested
 
-## General task description
-Your task is to write unit tests for code, provided in file `index.ts`. 
+```ts
+// isEven.ts
 
----
+export const isEven = (num: number) => {
+  return num % 2 === 0 ? 'Yes' : 'No';
+};
+```
 
-### **Simple tests**
+Good:
 
-Write unit tests for the `simpleCalculator` function, which performs basic mathematical operations - addition, subtraction, division, multiplication, and exponentiation. Your task is to verify that the operations are executed correctly and that the function returns `null` for invalid input.
+```ts
+test('should return "Yes" for even numbers', () => {
+  const result = isEven(8);
+  expect(result).toBe('Yes');
+});
+```
 
-Write your tests in `src/01-simple-tests/index.test.ts`.
+Bad:
 
----
+```ts
+test('should return "Yes" for even numbers', () => {
+  const result = isEven(8);
+  expect(typeof result).toBe('string');
+});
+```
 
-### **Table tests**
+- Stable (multiple runs produce same test result)
+- Isolated (don't rely on external data/don't perform API calls)
 
-Your task is to rewrite the tests written in the previous task using the table-driven testing approach, utilizing the appropriate Jest API.
+## Forfeits
 
-Write your tests in `src/02-table-tests/index.test.ts`.
-
----
-
-
-### **Error handling & async**
-
-Your task is to test functions that work asynchronously/throw/reject exceptions..
-
-Write your tests in `src/03-error-handling-async/index.test.ts`.
-
----
-
-### **Testing class**
-
-Your task is to test a class representing a bank account that implements corresponding operations. Please note that some methods of the class invoke others, some operations result in errors, and the implementation is asynchronous and involves the native JS API. These aspects should be taken into account when writing the tests.
-
-Write your tests in `src/04-test-class/index.test.ts`.
-
----
-
-### **Partial mocking**
-
-Your task is to utilize the Jest API to partially mock the contents of a module.
-
-Write your tests in `src/05-partial-mocking/index.test.ts`.
-
----
-
-### **Mocking Node.js API**
-
-Your task is to test the proper usage of the Node.js API based on commonly used APIs such as the `fs` module, as well as `setTimeout` and `setInterval`. Remember that the tests should not interact with the actual file system and should not rely on real-time!
-
-Write your tests in `src/06-mocking-node-api/index.test.ts`.
-
----
-
-### **Mocking library API**
-
-Your task is to test that function that utilize library APIs is working correctly (with commonly used libraries such as `axios` and `lodash` as examples).
-
-Write your tests in `src/07-mocking-lib-api/index.test.ts`.
-
----
-
-### **Snapshot testing**
-
-Your task is to use snapshot testing with Jest and compare it to regular comparison testing.
-
-Write your tests in `src/08-snapshot-testing/index.test.ts`.
-
----
-
-© [AlreadyBored](https://github.com/AlreadyBored)
+- **-5** for each linter warning
+- **-10** for each linter/TS compiler error
+- **-30% of total task score** Commits after deadline (except commits that affect only Readme.md, .gitignore, etc.)
